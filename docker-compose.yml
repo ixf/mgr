@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  ubuntu:
+    image: "python:3-buster"
+    # command: 
+    tty: true
+    volumes:
+      - ./target/:/mnt/target
+      - ./workers/:/mnt/workers

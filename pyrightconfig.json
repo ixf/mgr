@@ -1,0 +1,5 @@
+{
+    "reportWildcardImportFromLibrary": false,
+    "reportSelfClsParameterName": false,
+    "reportUnusedVariable": false
+}

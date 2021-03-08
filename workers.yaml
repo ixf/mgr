@@ -1,0 +1,72 @@
+demo:
+  env: demo
+  cmd: >-
+    python workers/demo_cattac.py \
+      --file target/2m
+simple1:
+  env: simple1
+  comment: one file, repeated linear read
+  cmd: >-
+    python workers/simple1.py \
+      --repeats 50 \
+      --file ./target/file
+simple2: &simple2
+  env: simple2
+  comment: many small files. files are read in the same, repeating order
+  cmd: >-
+    python workers/simple2.py \
+      --repeats 50 \
+      --dir target/
+simple3:
+  <<: *simple2
+  env: simple3
+  comment: like simple2, but files are larger (several reads)
+
+hard1a: &hard1
+  env: hard1a
+  cmd: >-
+    python workers/hard1.py \
+      --repeats 50 \
+      --dir ./target
+hard1b:
+  <<: *hard1
+  env: hard1b
+
+wf1:
+  env: soykb
+  dir: soykb
+  cmd: >-
+    docker run -a stdout -a stderr --rm \
+      --network container:redis \
+      -e HF_VAR_WORKER_CONTAINER="hyperflowwms/soykb-worker" \
+      -e HF_VAR_WORK_DIR="{target}/input" \
+      -e HF_VAR_HFLOW_IN_CONTAINER="true" \
+      -e HF_VAR_function="redisCommand" \
+      -e REDIS_URL="redis://127.0.0.1:6379" \
+      --name hflow_soykb \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      -v {target}:/wfdir \
+      --entrypoint "/bin/sh" \
+      hf:latest -c "hflow run /wfdir" \
+      && echo 'DONE' \
+      && exit 0
+
+kinc:
+  env: kinc
+  cmd: >-
+    docker run -a stdout -a stderr --rm --network container:redis \
+      -e HF_VAR_WORKER_CONTAINER="hyperflowwms/kinc-worker" \
+      -e HF_VAR_WORK_DIR="$PWD/target/" \
+      -e HF_VAR_HFLOW_IN_CONTAINER="true" \
+      -e HF_VAR_function="redisCommand" \
+      -e REDIS_URL="redis://127.0.0.1:6379" \
+      --name hyperflow \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      -v $PWD/target:/wfdir \
+      --entrypoint "/bin/sh" hflow -c "hflow run /wfdir" && exit 0
+zip:
+  env: zip
+  cmd: >-
+    python workers/zip.py \
+      --repeats 100 \
+      --dir ./target

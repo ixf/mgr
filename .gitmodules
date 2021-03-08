@@ -1,0 +1,3 @@
+[submodule "sources/soykb-workflow"]
+	path = sources/soykb-workflow
+	url = https://github.com/hyperflow-wms/soykb-workflow

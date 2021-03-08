@@ -1,0 +1,56 @@
+default: &default
+  source: demo
+  ping: 0
+  cache: 256K
+  block_size: 16K
+
+simple1: &simple
+  source: simple1
+  ping: 0
+  cache: 256K
+  block_size: 16K
+simple2:
+  <<: *simple
+  source: simple2
+simple3:
+  <<: *simple
+  source: simple3
+
+hard1a: &hard1
+  source: hard1a
+  ping: 0
+  cache: 1M
+  block_size: 16K
+hard1b:
+  <<: *hard1
+  source: hard1b
+
+demo:
+  source: demo
+  ping: 100
+  cache: 2M
+  block_size: 128K
+many:
+  source: many
+  ping: 0
+  cache: 256K
+  block_size: 16K
+soykb: &soykb
+  source: soykb
+  ping: 0
+  cache: 64M
+  block_size: 4M
+wf1:
+  <<: *soykb
+kinc:
+  source: hflow_kinc
+  ping: 0
+  cache: 4M
+tmp:
+  cache: 256M
+zip:
+  ping: 0
+  source: zip
+  cache: 128K
+  block_size: 16K
+

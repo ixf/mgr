@@ -1,0 +1,42 @@
+test_sleep:
+  env: demo
+  cmd: >-
+    cat target/plik &&
+    sleep 1 &&
+    cat target/plik
+test_cat:
+  env: demo
+  cmd: >-
+    cat target/plik
+test_echo:
+  cmd: >-
+    echo -n tytus
+test_processes:
+  cmd: >-
+    cat target/plik &
+    cat target/plik &
+    cat target/plik &
+    cat target/plik &
+    cat target/plik
+test_docker:
+  env: demo
+  cmd: >-
+    docker run --rm
+    -v {target}:/target
+    ubuntu
+    cat /target/plik
+test_docker_processes:
+  env: demo
+  cmd: >-
+    docker run --rm
+    -v {target}:/target
+    ubuntu
+    bash -c
+    "cat /target/plik ; cat /target/plik"
+    2>&1
+test_zip:
+  env: zip
+  cmd: >-
+    python workers/zip.py \
+      --repeats 10 \
+      --dir ./target
